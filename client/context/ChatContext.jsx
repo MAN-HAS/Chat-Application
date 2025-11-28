@@ -70,14 +70,16 @@ export const ChatProvider = ({ children })=>{
     useEffect(() => {
         if (!socket) return;
       
-        const handler = (newMessage) => {
-          //  If chat is OPEN
-          if (selectedUser && newMessage.senderId === selectedUser._id) {
+        const handler = async (newMessage) => {
+          const isChatOpen =
+            selectedUser &&
+            (newMessage.senderId === selectedUser._id ||
+             newMessage.receiverId === selectedUser._id);
+      
+          if (isChatOpen) {
             setMessages(prev => [...prev, newMessage]);
-            axios.put(`/api/messages/mark/${newMessage._id}`);
-          } 
-          //  If chat is NOT OPEN
-          else {
+            await axios.put(`/api/messages/mark/${newMessage._id}`);
+          } else {
             setUnseenMessages(prev => ({
               ...prev,
               [newMessage.senderId]: (prev[newMessage.senderId] || 0) + 1
@@ -87,10 +89,7 @@ export const ChatProvider = ({ children })=>{
       
         socket.on("newMessage", handler);
       
-        // CLEANUP — very important
-        return () => {
-          socket.off("newMessage", handler);
-        };
+        return () => socket.off("newMessage", handler);
       }, [socket, selectedUser]);
       
 

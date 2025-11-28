@@ -21,7 +21,7 @@ const Sidebar = () => {
 
   useEffect(()=>{
     getUsers();
-  },[onlineUsers])
+  },[])
 
  
 
