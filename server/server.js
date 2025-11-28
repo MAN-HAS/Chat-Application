@@ -16,7 +16,7 @@ const server = http.createServer(app);
 
 //Initialze socket.io server
 export const io = new Server(server,{
-    cors: {orgin: "*"}
+    cors: {origin: "*"}
 })
 
 //store online Users
