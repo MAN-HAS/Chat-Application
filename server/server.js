@@ -52,5 +52,11 @@ app.use("/api/status" , (req,res)=> res.send("server is live"));
 app.use("/api/auth" , userRouter);
 app.use("/api/messages",messageRouter);
 
+if(process.env.NODE_ENV !== "production"){
 const PORT = process.env.PORT || 5001;
-server.listen(PORT , ()=> console.log("server is running on PORT :" + PORT));
+server.listen(PORT , ()=> console.log("server is running on PORT :" 
++ PORT))
+}
+
+//export server for (versel) production deployment
+export default server;
